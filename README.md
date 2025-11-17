@@ -119,6 +119,7 @@ Email notifications
 👤 Author
 
 Harshit Raj Yadav
+
 Backend Developer | MERN Stack Enthusiast
 
 ⭐ If this project helped you, consider giving the repo a star!
