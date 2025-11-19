@@ -4,16 +4,16 @@ import morgan from "morgan";
 import cors from "cors";
 import connectDB from "./config/db.js";
 
-// ✅ Route imports (filenames confirmed)
+// ✅ Route imports
 import authRoutes from "./routes/authRoutes.js";
 import userRoutes from "./routes/user.js";
 import leadRoutes from "./routes/lead.js";
 import dashboardRoutes from "./routes/dashboard.js";
-import customerRoutes from "./routes/customer.js"; // ✅ newly added
+import customerRoutes from "./routes/customer.js";
 
 dotenv.config();
 
-// ✅ Connect to MongoDB before starting the server
+// ✅ Connect Database
 connectDB();
 
 const app = express();
@@ -21,10 +21,14 @@ const app = express();
 // ✅ Middleware
 app.use(
   cors({
-    origin: "http://localhost:3000", // Allow React frontend
+    origin: [
+      "http://localhost:3000",                // Local frontend
+      "https://your-frontend-domain.com",     // Replace after deploying frontend
+    ],
     credentials: true,
   })
 );
+
 app.use(express.json());
 app.use(morgan("dev"));
 
@@ -33,14 +37,14 @@ app.use("/api/auth", authRoutes);
 app.use("/api/users", userRoutes);
 app.use("/api/leads", leadRoutes);
 app.use("/api/dashboard", dashboardRoutes);
-app.use("/api/customers", customerRoutes); // ✅ added route
+app.use("/api/customers", customerRoutes);
 
-// ✅ Root route
+// ✅ Root Route
 app.get("/", (req, res) => {
   res.send("✅ API is running...");
 });
 
-// ✅ Global error handler
+// ✅ Global Error Handler
 app.use((err, req, res, next) => {
   console.error("❌ Global Error:", err.stack);
   res.status(500).json({
@@ -49,11 +53,9 @@ app.use((err, req, res, next) => {
   });
 });
 
-// ✅ Start Server
+// ✅ Start Server (IMPORTANT for Render)
 const PORT = process.env.PORT || 5000;
 
-app.listen(PORT, () => {
-  console.log(
-    `🚀 Server running in ${process.env.NODE_ENV || "development"} mode on port ${PORT}`
-  );
+app.listen(PORT, "0.0.0.0", () => {
+  console.log(`🚀 Server running on port ${PORT}`);
 });

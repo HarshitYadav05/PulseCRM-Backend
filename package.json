@@ -1,15 +1,19 @@
 {
   "name": "crm-pro-backend",
   "version": "1.0.0",
-  "description": "CRM Pro Backend for MERN Project",
+  "description": "PulseCRM Backend for MERN Project",
   "main": "server.js",
   "type": "module",
   "scripts": {
     "start": "node server.js",
-    "server": "nodemon server.js"
+    "server": "nodemon server.js",
+    "build": "echo \"No build step required\""
+  },
+  "engines": {
+    "node": ">=18.x"
   },
   "keywords": [],
-  "author": "",
+  "author": "Harshit Raj Yadav",
   "license": "ISC",
   "dependencies": {
     "bcryptjs": "^3.0.2",
