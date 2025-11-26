@@ -5,27 +5,27 @@ export const protect = async (req, res, next) => {
   let token;
 
   try {
-    // ✅ Check for Bearer token
+    // Check for Bearer token
     if (
       req.headers.authorization &&
       req.headers.authorization.startsWith("Bearer")
     ) {
       token = req.headers.authorization.split(" ")[1];
 
-      // ✅ Verify token
+      // Verify token
       const decoded = jwt.verify(token, process.env.JWT_SECRET);
 
-      // ✅ Your token payload = { id: user._id }
-      const userId = decoded.id;
+      // FIXED: Your token payload uses _id, not id
+      const userId = decoded._id;
 
       if (!userId) {
-        console.error("❌ Token decoded but no user id found:", decoded);
+        console.error("❌ Token decoded but no _id found:", decoded);
         return res
           .status(401)
           .json({ message: "Not authorized, invalid token payload" });
       }
 
-      // ✅ Attach user to request
+      // Attach user to request
       req.user = await User.findById(userId).select("-password");
 
       if (!req.user) {
@@ -34,11 +34,11 @@ export const protect = async (req, res, next) => {
           .json({ message: "Not authorized, user not found" });
       }
 
-      // ✅ Continue
+      // Continue
       return next();
     }
 
-    // ❌ No token
+    // No token
     return res.status(401).json({ message: "Not authorized, no token" });
   } catch (error) {
     console.error("❌ Auth Middleware Error:", error.message);
