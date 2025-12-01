@@ -4,7 +4,7 @@ import morgan from "morgan";
 import cors from "cors";
 import connectDB from "./config/db.js";
 
-// ✅ Route imports
+// Route imports
 import authRoutes from "./routes/authRoutes.js";
 import userRoutes from "./routes/user.js";
 import leadRoutes from "./routes/lead.js";
@@ -13,38 +13,39 @@ import customerRoutes from "./routes/customer.js";
 
 dotenv.config();
 
-// ✅ Connect Database
+// Connect DB
 connectDB();
 
 const app = express();
 
-// ✅ Middleware
+// ---- FIXED: Body Parsers ----
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
+
+// ---- FIXED: CORS Configuration ----
 app.use(
   cors({
-    origin: [
-      "http://localhost:3000",                // Local frontend
-      "https://your-frontend-domain.com",     // Replace after deploying frontend
-    ],
+    origin: "*", // allow all for now
     credentials: true,
   })
 );
 
-app.use(express.json());
+// Logging
 app.use(morgan("dev"));
 
-// ✅ API Routes
+// Routes
 app.use("/api/auth", authRoutes);
 app.use("/api/users", userRoutes);
 app.use("/api/leads", leadRoutes);
 app.use("/api/dashboard", dashboardRoutes);
 app.use("/api/customers", customerRoutes);
 
-// ✅ Root Route
+// Root
 app.get("/", (req, res) => {
   res.send("✅ API is running...");
 });
 
-// ✅ Global Error Handler
+// Global Error Handler
 app.use((err, req, res, next) => {
   console.error("❌ Global Error:", err.stack);
   res.status(500).json({
@@ -53,7 +54,7 @@ app.use((err, req, res, next) => {
   });
 });
 
-// ✅ Start Server (IMPORTANT for Render)
+// Start Server
 const PORT = process.env.PORT || 5000;
 
 app.listen(PORT, "0.0.0.0", () => {
