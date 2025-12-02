@@ -1,3 +1,5 @@
+console.log(" New deployment - force rebuild");
+
 import express from "express";
 import dotenv from "dotenv";
 import morgan from "morgan";
@@ -12,20 +14,24 @@ import dashboardRoutes from "./routes/dashboard.js";
 import customerRoutes from "./routes/customer.js";
 
 dotenv.config();
-
-// Connect DB
 connectDB();
 
 const app = express();
 
-// ---- FIXED: Body Parsers ----
+// Body parsing
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-// ---- FIXED: CORS Configuration ----
+// CORS
 app.use(
   cors({
-    origin: "*", // allow all for now
+    origin: [
+      "http://localhost:3000",
+      "https://pulsecrm-frontend.vercel.app",
+      "https://pulsecrm-frontend.netlify.app"
+    ],
+    methods: ["GET", "POST", "PUT", "DELETE"],
+    allowedHeaders: ["Content-Type", "Authorization"],
     credentials: true,
   })
 );
@@ -33,30 +39,29 @@ app.use(
 // Logging
 app.use(morgan("dev"));
 
-// Routes
+// API Routes
 app.use("/api/auth", authRoutes);
 app.use("/api/users", userRoutes);
 app.use("/api/leads", leadRoutes);
 app.use("/api/dashboard", dashboardRoutes);
 app.use("/api/customers", customerRoutes);
 
-// Root
+// Root route
 app.get("/", (req, res) => {
-  res.send("✅ API is running...");
+  res.send("API is running...");
 });
 
 // Global Error Handler
 app.use((err, req, res, next) => {
-  console.error("❌ Global Error:", err.stack);
+  console.error("Error:", err.stack);
   res.status(500).json({
     message: "Something broke!",
     error: err.message,
   });
 });
 
-// Start Server
+// Start server
 const PORT = process.env.PORT || 5000;
-
 app.listen(PORT, "0.0.0.0", () => {
-  console.log(`🚀 Server running on port ${PORT}`);
+  console.log(`Server running on port ${PORT}`);
 });
