@@ -5,12 +5,10 @@ A secure, scalable backend API for PulseCRM — a MERN-based Customer Relationsh
 This backend handles authentication, user management, leads & customers CRUD operations, with full JWT-based authorization.
 
 🔗 Live Demo:
-
-https://your-vercel-link.vercel.app
+(https://pulse-crm-frontend.vercel.app)
 
 ⚙️ Backend API:
-
-https://your-backend-link.railway.app/api
+(https://pulsecrm-backend-production.up.railway.app/api)
 
 📌 Features
 🔐 Authentication & Security
